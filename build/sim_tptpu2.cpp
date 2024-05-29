@@ -52,12 +52,12 @@ int main(int argc, char *argv[]) {
         std::cerr << "Something wrong with dimension layout: only nchw and nhwc allowed" << std::endl;
         return -1;
     }
-    // 24MiB buffer
-    float buffer_size = (float)(3 * (1 << 23));
-    float clock         = 0.7;                                  // 700MHz
+    //8MB buffer per MXU
+    float buffer_size = (float)(1 * (1 << 23));
+    float clock         = 0.94;                                  // 700MHz
     // the two bw should be changed later to be more flexible and add up to 300GB/s
-    float bw_dram_wf = 267; // 267GB/s
-    float bw_dram_ub = 33;  // 33GB/s
+    float bw_dram_wf = 225; // 267GB/s
+    float bw_dram_ub = 225;  // 33GB/s
     int sa_width = 128;
     int sa_height = 128;
     int accumulator_size = 1024;
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
     float bw_wf_mmu = 100;  // meaningless
     UnifiedBuffer *ub = new UnifiedBuffer(buffer_size);
     DRAM *dram = new DRAM(dram_name, clock, channels, ranks);
-    WeightFetcher *wf = new WeightFetcher(256 * 256, 4, sa_height);
+    WeightFetcher *wf = new WeightFetcher(sa_width * sa_height, 4, sa_height);
     Interconnect *dram_ub_icnt = new Interconnect((Unit *)dram, (Unit *)ub, clock, bw_dram_ub, ub->GetCapacity(),
                                                   dram->IsMainMemory(), dram->GetUBSenderQueue(),
                                                   ub->GetServedQueue(), ub->GetWaitingQueue(), ub->GetRequestQueue());

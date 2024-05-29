@@ -33,6 +33,10 @@ make tptpu2
 ./build/sim_tptpu2.exe -d HBM -c 2 -r 2 -x 640 -y 640 -z 1080 -l nchw
 ```
 
+### Parameters:
+Change the accelerator parameters in /build/sim_tptpu2.cpp file
+Change the mmu/vu parameters (mmu latency) in /src/tpu2_uarch/mmu.cpp file
+
 ### Architecture:
 
 1. ***Overall:***\

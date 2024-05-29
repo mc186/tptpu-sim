@@ -74,7 +74,7 @@ void MatrixMultiplyUnit::Cycle() {
             return;
         }
         // not computing, but ready to compute-> not idle
-        wait_cycle = accumulator_size + systolic_array_width - 1;
+        wait_cycle = accumulator_size + systolic_array_width + systolic_array_height - 1; //some fixed latency for vector ops/ activations
         current_order = tiling_queue->front().order;
     }
     // 'compute'
