@@ -1,0 +1,46 @@
+new: new-sim
+
+NEW_SIM := ./build/sim_new.exe
+
+CC := g++
+CPP_SUFFIX := cpp
+
+INCLUDE_DIR := -I./include/new_uarch
+SRC_DIR = ./src
+OBJ_DIR = ./obj
+BUILD_DIR = ./build
+
+CFLAGS := -g -Wall -std=c++11
+LDFLAGS :=
+LIBS :=
+
+# all sources
+SRC = $(wildcard $(SRC_DIR)/*.$(CPP_SUFFIX))
+SRC += $(wildcard $(SRC_DIR)/new_uarch/*.$(CPP_SUFFIX))
+
+# objects
+OBJ = $(patsubst $(SRC_DIR)/%.$(CPP_SUFFIX), $(OBJ_DIR)/%.o, $(SRC))
+
+DIR = $(dir $(OBJ))
+
+# objects not mutually shared among tests
+NEW_SIM_OBJ := ./obj/sim_new.o
+
+# executables
+new-sim: dir $(OBJ) $(NEW_SIM_OBJ)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ) $(NEW_SIM_OBJ) -o $(NEW_SIM) $(LIBS)
+
+dir:
+	mkdir -p $(DIR)
+
+obj/sim_new.o: $(BUILD_DIR)/sim_new.cpp
+	$(CC) $(INCLUDE_DIR) $(CFLAGS) -c ./build/sim_new.cpp -o ./obj/sim_new.o
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.$(CPP_SUFFIX)
+	$(CC) $(INCLUDE_DIR) $(CFLAGS) -c $< -o $@
+
+clean:
+	-rm -rf $(OBJ_DIR)
+	-rm ./ramulator_output2/*
+	-rm ./build/dram2/*
+	-rm $(NEW_SIM)
